@@ -2,11 +2,11 @@
   "configurations": [
     {
       "type": "java",
-      "name": "Spring Boot-SkyApplication<sky-server>",
+      "name": "Spring Boot-ElectricEquipmentApplication<equipment-server>",
       "request": "launch",
       "cwd": "${workspaceFolder}",
-      "mainClass": "com.sky.SkyApplication",
-      "projectName": "sky-server",
+      "mainClass": "com.power.ElectricEquipmentApplication",
+      "projectName": "equipment-server",
       "args": "",
       "envFile": "${workspaceFolder}/.env"
     }

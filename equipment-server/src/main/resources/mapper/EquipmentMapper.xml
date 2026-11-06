@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.power.mapper.EquipmentMapper">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into equipment
+        (code, name, category_id, brand, model, unit, price, stock_quantity, image, description, status, create_time, update_time, create_user, update_user)
+        values
+        (#{code}, #{name}, #{categoryId}, #{brand}, #{model}, #{unit}, #{price}, #{stockQuantity}, #{image}, #{description}, #{status}, #{createTime}, #{updateTime}, #{createUser}, #{updateUser})
+    </insert>
+
+    <select id="pageQuery">
+        select e.*, c.name as categoryName from equipment e left outer join category c on e.category_id = c.id
+        <where>
+            <if test="code != null and code != ''">
+                and e.code like concat('%', #{code}, '%')
+            </if>
+            <if test="name != null">
+                and e.name like concat('%', #{name}, '%')
+            </if>
+            <if test="brand != null and brand != ''">
+                and e.brand like concat('%', #{brand}, '%')
+            </if>
+            <if test="categoryId != null">
+                and e.category_id = #{categoryId}
+            </if>
+            <if test="status != null">
+                and e.status = #{status}
+            </if>
+        </where>
+        order by e.create_time desc
+    </select>
+
+    <update id="update">
+        update equipment
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="categoryId != null">
+                category_id = #{categoryId},
+            </if>
+            <if test="code != null">
+                code = #{code},
+            </if>
+            <if test="brand != null">
+                brand = #{brand},
+            </if>
+            <if test="model != null">
+                model = #{model},
+            </if>
+            <if test="unit != null">
+                unit = #{unit},
+            </if>
+            <if test="price != null">
+                price = #{price},
+            </if>
+            <if test="stockQuantity != null">
+                stock_quantity = #{stockQuantity},
+            </if>
+            <if test="image != null">
+                image = #{image},
+            </if>
+            <if test="description != null">
+                description = #{description},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+            <if test="updateUser != null">
+                update_user = #{updateUser}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="list">
+        select * from equipment
+        <where>
+            <if test="name != null">
+                and name like concat('%',#{name},'%')
+            </if>
+            <if test="code != null">
+                and code like concat('%',#{code},'%')
+            </if>
+            <if test="brand != null">
+                and brand like concat('%',#{brand},'%')
+            </if>
+            <if test="categoryId != null">
+                and category_id = #{categoryId}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="countByMap" resultType="java.lang.Integer">
+        select count(id) from equipment
+        <where>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="categoryId != null">
+                and category_id = #{categoryId}
+            </if>
+        </where>
+    </select>
+
+    <delete id="deleteByIds">
+        delete from equipment where id in
+        <foreach collection="ids" open="(" close=")" separator="," item="id">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

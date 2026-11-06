@@ -9,23 +9,23 @@
         <relativePath /> <!-- lookup parent from repository -->
     </parent>
 
-    <groupId>com.sky</groupId>
-    <artifactId>sky-take-out</artifactId>
+    <groupId>com.power</groupId>
+    <artifactId>electric-equipment-platform</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
-    <description>sky-take-out</description>
+    <description>electric-equipment-platform</description>
     <modules>
-        <module>./sky-common</module>
-        <module>./sky-pojo</module>
-        <module>./sky-server</module>
+        <module>./equipment-common</module>
+        <module>./equipment-pojo</module>
+        <module>./equipment-server</module>
     </modules>
 
     <properties>
         <java.version>17</java.version>
 
         <mybatis.spring>3.0.2</mybatis.spring>
-        <lombok>1.18.28</lombok>
-        <fastjson>1.2.76</fastjson>
+        <lombok>1.18.34</lombok>
+        <fastjson>1.2.83</fastjson>
         <commons.lang>2.6</commons.lang>
         <druid>1.2.15</druid>
         <pagehelper>1.4.7</pagehelper>

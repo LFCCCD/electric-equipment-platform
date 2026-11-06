@@ -25,8 +25,15 @@ replay_pid*
 
 **/target/
 *.iml
-*Test.java
-**/test/
 
-# env yml
+# Environment and local tooling
+.env
 *-env.yml
+application-env.yml
+.tools/
+.idea/
+node_modules/
+
+# Local database and runtime files
+data/
+logs/

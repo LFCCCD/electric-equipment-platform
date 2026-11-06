@@ -1,0 +1,10 @@
+.git
+.github
+.idea
+.tools
+.vscode
+.env
+**/target
+**/application-env.yml
+docs/*.docx
+*.log
