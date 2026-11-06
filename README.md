@@ -1,5 +1,7 @@
 # 电力设备采购平台
 
+[![Java CI](https://github.com/LFCCCD/electric-equipment-platform/actions/workflows/ci.yml/badge.svg)](https://github.com/LFCCCD/electric-equipment-platform/actions/workflows/ci.yml)
+
 基于 Spring Boot 的电力设备采购平台后端，面向平台运营人员与企业采购人员。项目在
 [Sonder-MX/sky-take-out](https://github.com/Sonder-MX/sky-take-out) 的 Apache-2.0
 许可代码基础上进行业务域重构，保留成熟的后台管理、购物车、订单、报表和鉴权能力，
