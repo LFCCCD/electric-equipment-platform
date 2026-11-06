@@ -183,14 +183,18 @@ CREATE TABLE IF NOT EXISTS `shopping_cart` (
 CREATE TABLE IF NOT EXISTS `user` (
     `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'Primary key',
     `openid` varchar(64) DEFAULT NULL COMMENT 'WeChat openid when mini-program login is enabled',
+    `username` varchar(64) DEFAULT NULL COMMENT 'Local H5 login name',
+    `password` varchar(255) DEFAULT NULL COMMENT 'PBKDF2 password hash',
     `name` varchar(64) DEFAULT NULL,
     `phone` varchar(20) DEFAULT NULL,
     `sex` varchar(2) DEFAULT NULL,
     `id_number` varchar(32) DEFAULT NULL,
     `avatar` varchar(500) DEFAULT NULL,
+    `status` int NOT NULL DEFAULT '1' COMMENT '0 disabled, 1 enabled',
     `create_time` datetime DEFAULT NULL,
     PRIMARY KEY (`id`),
-    UNIQUE KEY `uk_user_openid` (`openid`)
+    UNIQUE KEY `uk_user_openid` (`openid`),
+    UNIQUE KEY `uk_user_username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='Procurement users';
 
 -- Demo administrator: admin / 123456
@@ -242,3 +246,18 @@ INSERT IGNORE INTO `package_equipment`
 VALUES
     (1, 1, 1, '10kV真空断路器', 12800.00, 1),
     (2, 1, 3, '智能接地监测装置', 3680.00, 1);
+
+-- Demo buyer account: buyer / 123456
+INSERT IGNORE INTO `user`
+    (`id`, `username`, `password`, `name`, `phone`, `sex`, `status`, `create_time`)
+VALUES
+    (1, 'buyer',
+     'pbkdf2_sha256$120000$ZWxlY3RyaWMtZGVtby0wMQ==$7yOljiuUf4h9iDyRMPR3astxFT2hzK/pRgTrqj4NldU=',
+     '企业采购员', '13900000000', '男', 1, NOW());
+
+INSERT IGNORE INTO `delivery_address`
+    (`id`, `user_id`, `consignee`, `sex`, `phone`, `province_name`, `city_name`,
+     `district_name`, `detail`, `label`, `is_default`)
+VALUES
+    (1, 1, '张工', '男', '13900000000', '上海市', '上海市', '浦东新区',
+     '张江路88号示例工业园3号楼', '工程项目', 1);

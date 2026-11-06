@@ -9,6 +9,7 @@ import com.power.vo.EquipmentVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
@@ -47,6 +48,17 @@ public class EquipmentController {
         redisTemplate.opsForValue().set(cacheKey, list);
 
         return Result.success(list);
+    }
+
+    /**
+     * 查询设备详情和规格。
+     *
+     * @param id 设备ID
+     * @return 设备详情
+     */
+    @GetMapping("/{id}")
+    public Result<EquipmentVO> getById(@PathVariable Long id) {
+        return Result.success(equipmentService.getByIdWithSpec(id));
     }
 
 }

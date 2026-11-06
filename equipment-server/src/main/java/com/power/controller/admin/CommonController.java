@@ -1,8 +1,11 @@
 package com.power.controller.admin;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,6 +19,9 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/admin/common")
 @Slf4j
 public class CommonController {
+
+    @Value("${power.upload-dir:./uploads}")
+    private String uploadDir;
 
     /**
      * 上传图片
@@ -32,9 +38,11 @@ public class CommonController {
             suffix = originalFilename.substring(originalFilename.lastIndexOf("."));
         }
         String fileName = UUID.randomUUID().toString() + suffix;
-        String imgUrl = "http://localhost/media/" + fileName;
+        String imgUrl = "/media/" + fileName;
         try {
-            file.transferTo(new java.io.File("D:\\Variable\\nginx-1.24.0\\media\\" + fileName));
+            Path targetDirectory = Path.of(uploadDir).toAbsolutePath().normalize();
+            Files.createDirectories(targetDirectory);
+            file.transferTo(targetDirectory.resolve(fileName));
             return Result.success(imgUrl);
         } catch (IllegalStateException | IOException e) {
             log.error("上传图片失败：{}", e);

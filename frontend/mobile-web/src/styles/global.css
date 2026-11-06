@@ -1,0 +1,172 @@
+:root {
+  font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+  color: #1f3442;
+  background: #f4f7f8;
+  font-synthesis: none;
+  --brand: #1f617a;
+  --brand-deep: #153b50;
+  --accent: #c8794a;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  min-width: 320px;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(81, 158, 181, 0.13), transparent 34%),
+    #f4f7f8;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+.page {
+  min-height: 100vh;
+  padding: 0 16px 28px;
+}
+
+.has-tabbar .page {
+  padding-bottom: calc(88px + env(safe-area-inset-bottom));
+}
+
+.subpage {
+  min-height: 100vh;
+  padding: 14px 16px 28px;
+}
+
+.section-title {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin: 24px 0 12px;
+}
+
+.section-title h2 {
+  margin: 0;
+  color: #1c3545;
+  font-size: 19px;
+}
+
+.section-title span {
+  color: #8a99a3;
+  font-size: 11px;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.product-card {
+  overflow: hidden;
+  border: 1px solid #e7edef;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 8px 20px rgba(42, 70, 85, 0.055);
+}
+
+.product-card__cover {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  height: 112px;
+  padding: 14px;
+  background:
+    radial-gradient(circle at 78% 20%, rgba(255, 255, 255, 0.45), transparent 22%),
+    linear-gradient(135deg, #c7e0e8, #78aec0);
+  color: #1c4d61;
+}
+
+.product-card__cover::after {
+  content: "";
+  position: absolute;
+  width: 72px;
+  height: 72px;
+  right: -18px;
+  top: -16px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+}
+
+.product-card__cover strong {
+  font-size: 33px;
+  opacity: 0.38;
+}
+
+.product-card__body {
+  padding: 12px;
+}
+
+.product-card__body h3 {
+  overflow: hidden;
+  margin: 0;
+  color: #263f4e;
+  font-size: 14px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.product-card__body p {
+  overflow: hidden;
+  margin: 6px 0 10px;
+  color: #91a0a8;
+  font-size: 10px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.price {
+  color: #b56237;
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.price small {
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.muted {
+  color: #8e9ca5;
+}
+
+.empty-block {
+  padding: 48px 0;
+}
+
+.bottom-action {
+  position: fixed;
+  z-index: 20;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+  border-top: 1px solid #e8edef;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(12px);
+}
+
+.bottom-action__main {
+  flex: 1;
+}
+
+.bottom-action .van-button {
+  border-color: var(--brand);
+  background: var(--brand);
+}

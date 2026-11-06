@@ -56,11 +56,26 @@ public interface OrderService {
     OrderVO details(Long id);
 
     /**
+     * 查询当前采购用户的订单详情。
+     *
+     * @param id 订单ID
+     * @return 订单详情
+     */
+    OrderVO detailsForUser(Long id);
+
+    /**
      * 用户取消订单
      *
      * @param id
      */
     void userCancelById(Long id) throws Exception;
+
+    /**
+     * 采购用户确认收货。
+     *
+     * @param id 订单ID
+     */
+    void userComplete(Long id);
 
     /**
      * 再来一单

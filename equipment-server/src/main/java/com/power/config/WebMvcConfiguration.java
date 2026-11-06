@@ -7,8 +7,10 @@ import com.power.json.JacksonObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
+import java.nio.file.Path;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 // import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -30,6 +32,9 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
     @Autowired
     private JwtTokenUserInterceptor jwtTokenUserInterceptor;
 
+    @Value("${power.upload-dir:./uploads}")
+    private String uploadDir;
+
     /**
      * 注册自定义拦截器
      *
@@ -44,6 +49,7 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
         registry.addInterceptor(jwtTokenUserInterceptor)
                 .addPathPatterns("/user/**")
                 .excludePathPatterns("/user/user/login")
+                .excludePathPatterns("/user/user/demo-login")
                 .excludePathPatterns("/user/merchant/status");
     }
 
@@ -78,6 +84,8 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
         log.info("开始设置静态资源映射...");
         registry.addResourceHandler("/doc.html").addResourceLocations("classpath:/META-INF/resources/");
         registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
+        String mediaLocation = Path.of(uploadDir).toAbsolutePath().normalize().toUri().toString();
+        registry.addResourceHandler("/media/**").addResourceLocations(mediaLocation);
     }
 
     /**

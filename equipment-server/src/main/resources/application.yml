@@ -65,6 +65,7 @@ management:
       show-details: never
 
 power:
+  upload-dir: ${UPLOAD_DIR:./uploads}
   jwt:
     admin-secret-key: ${JWT_ADMIN_SECRET:change-this-admin-secret-before-production}
     admin-ttl: ${JWT_ADMIN_TTL:7200000}

@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.power.constant.MessageConstant;
+import com.power.constant.StatusConstant;
+import com.power.dto.BuyerLoginDTO;
 import com.power.dto.UserLoginDTO;
 import com.power.entity.User;
 import com.power.exception.LoginFailedException;
@@ -17,6 +19,7 @@ import com.power.mapper.UserMapper;
 import com.power.properties.WeChatProperties;
 import com.power.service.UserService;
 import com.power.utils.HttpClientUtil;
+import com.power.utils.PasswordUtil;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -66,6 +69,22 @@ public class UserServiceImpl implements UserService {
         }
 
         // 返回用户信息
+        return user;
+    }
+
+    @Override
+    public User localLogin(BuyerLoginDTO buyerLoginDTO) {
+        if (buyerLoginDTO == null
+                || buyerLoginDTO.getUsername() == null
+                || buyerLoginDTO.getPassword() == null) {
+            throw new LoginFailedException(MessageConstant.LOGIN_FAILED);
+        }
+        User user = userMapper.getByUsername(buyerLoginDTO.getUsername());
+        if (user == null
+                || !PasswordUtil.matches(buyerLoginDTO.getPassword(), user.getPassword())
+                || !StatusConstant.ENABLE.equals(user.getStatus())) {
+            throw new LoginFailedException(MessageConstant.LOGIN_FAILED);
+        }
         return user;
     }
 

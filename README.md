@@ -1,13 +1,15 @@
 # 电力设备采购平台
 
-[![Java CI](https://github.com/LFCCCD/electric-equipment-platform/actions/workflows/ci.yml/badge.svg)](https://github.com/LFCCCD/electric-equipment-platform/actions/workflows/ci.yml)
+[![Build and Test](https://github.com/LFCCCD/electric-equipment-platform/actions/workflows/ci.yml/badge.svg)](https://github.com/LFCCCD/electric-equipment-platform/actions/workflows/ci.yml)
 
-基于 Spring Boot 的电力设备采购平台后端，面向平台运营人员与企业采购人员。项目在
+面向平台运营人员与企业采购人员的电力设备采购平台，包含 Spring Boot 后端、
+Vue 3 运营管理后台和 Vue 3 + Vant 移动采购 H5。项目在
 [Sonder-MX/sky-take-out](https://github.com/Sonder-MX/sky-take-out) 的 Apache-2.0
 许可代码基础上进行业务域重构，保留成熟的后台管理、购物车、订单、报表和鉴权能力，
 并将商品域改为设备、规格与设备套餐。
 
-项目当前交付的是后端接口和数据脚本，不包含上游 README 中提到的 Vue 或 Uniapp 前端。
+当前版本可以直接演示“运营维护设备与套餐、采购人员选型加购下单、运营确认发货”的
+完整前后端流程。
 
 ## 功能范围
 
@@ -35,6 +37,8 @@
 - MySQL 8.0
 - Redis 7
 - JWT、ThreadLocal
+- Vue 3、Vue Router、Axios
+- Element Plus、Vant
 - Maven
 - Docker、Docker Compose
 
@@ -45,6 +49,9 @@ electric-equipment-platform
 ├── equipment-common   公共常量、异常、工具与配置属性
 ├── equipment-pojo     DTO、实体、VO
 ├── equipment-server   Controller、Service、Mapper、配置与启动类
+├── frontend
+│   ├── admin-web      Vue 3 + Element Plus 运营管理后台
+│   └── mobile-web     Vue 3 + Vant 移动采购 H5
 ├── demo               MySQL 建表与演示数据
 ├── docs               产品需求文档
 ├── Dockerfile
@@ -57,14 +64,16 @@ electric-equipment-platform
 
 1. 安装 Docker Desktop。
 2. 将 `.env.example` 复制为 `.env`，修改数据库密码和 JWT 密钥。
-3. 启动 MySQL、Redis 和应用：
+3. 启动 MySQL、Redis、后端和两个前端：
 
 ```bash
 docker compose up --build
 ```
 
-4. 访问健康检查：`http://localhost:8080/actuator/health`
-5. 访问接口文档：`http://localhost:8080/swagger-ui.html`
+- 运营后台：`http://localhost:8081`
+- 移动采购端：`http://localhost:8082`
+- 后端健康检查：`http://localhost:8080/actuator/health`
+- 接口文档：`http://localhost:8080/swagger-ui.html`
 
 首次启动时，MySQL 会自动执行 `demo/mysql.sql`，创建数据库、表、演示设备与套餐。
 
@@ -77,6 +86,13 @@ docker compose up --build
 
 共享环境中必须立即修改默认密码。
 
+演示采购账号：
+
+```text
+账号：buyer
+密码：123456
+```
+
 ### 本地开发
 
 需要 JDK 17、Maven 3.9、MySQL 8.0 和 Redis 7。
@@ -86,6 +102,17 @@ mysql -uroot -p < demo/mysql.sql
 mvn clean test
 mvn -pl equipment-server -am spring-boot:run
 ```
+
+在另一个终端安装并启动前端：
+
+```bash
+npm install
+npm run dev:admin
+npm run dev:mobile
+```
+
+- 运营后台开发地址：`http://localhost:5173`
+- 移动采购端开发地址：`http://localhost:5174`
 
 配置通过环境变量注入，常用变量如下：
 
@@ -116,10 +143,13 @@ GET  /admin/package/page
 GET  /admin/order/conditionSearch
 PUT  /admin/order/confirm
 
+POST /user/user/demo-login
 POST /user/user/login
 GET  /user/category/list
 GET  /user/equipment/list
+GET  /user/equipment/{id}
 GET  /user/package/list
+GET  /user/package/{id}
 POST /user/shoppingCart/add
 POST /user/order/submit
 ```
@@ -138,9 +168,11 @@ POST /user/order/submit
 
 ```bash
 mvn clean test
+npm run build
 ```
 
-服务层单元测试使用 Mockito，不依赖本地 MySQL、Redis 或外部支付服务。
+服务层单元测试使用 Mockito，不依赖本地 MySQL、Redis 或外部支付服务；前端构建会同时
+检查运营后台和移动端两个 Vue 应用。
 
 ## 产品文档
 

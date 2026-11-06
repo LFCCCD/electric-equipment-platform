@@ -24,5 +24,6 @@ public class MessageConstant {
     public static final String EQUIPMENT_BE_RELATED_BY_PACKAGE = "当前设备已关联设备套餐，不能删除";
     public static final String ORDER_STATUS_ERROR = "订单状态错误";
     public static final String ORDER_NOT_FOUND = "订单不存在";
+    public static final String ORDER_PERMISSION_DENIED = "无权操作该订单";
 
 }

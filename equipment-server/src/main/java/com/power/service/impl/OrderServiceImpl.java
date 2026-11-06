@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
@@ -106,9 +107,12 @@ public class OrderServiceImpl implements OrderService {
         orders.setOrderTime(LocalDateTime.now());
         orders.setPayStatus(Orders.UN_PAID);
         orders.setStatus(Orders.PENDING_PAYMENT);
-        orders.setNumber(String.valueOf(System.currentTimeMillis()));
+        orders.setNumber("EP" + System.currentTimeMillis()
+                + UUID.randomUUID().toString().replace("-", "").substring(0, 6).toUpperCase());
         orders.setPhone(deliveryAddress.getPhone());
         orders.setConsignee(deliveryAddress.getConsignee());
+        orders.setUserName(deliveryAddress.getConsignee());
+        orders.setAddress(formatDeliveryAddress(deliveryAddress));
         orders.setUserId(userId);
 
         orderMapper.insert(orders);
@@ -137,6 +141,16 @@ public class OrderServiceImpl implements OrderService {
         return orderSubmitVO;
     }
 
+    private String formatDeliveryAddress(DeliveryAddress deliveryAddress) {
+        return java.util.stream.Stream.of(
+                        deliveryAddress.getProvinceName(),
+                        deliveryAddress.getCityName(),
+                        deliveryAddress.getDistrictName(),
+                        deliveryAddress.getDetail())
+                .filter(value -> value != null && !value.isBlank())
+                .collect(Collectors.joining());
+    }
+
     /**
      * 订单支付
      *
@@ -144,9 +158,10 @@ public class OrderServiceImpl implements OrderService {
      * @return
      */
     public OrderPaymentVO payment(OrdersPaymentDTO ordersPaymentDTO) throws Exception {
-        // 当前登录用户id
-        // Long userId = BaseContext.getCurrentId();
-        // User user = userMapper.getById(userId);
+        Orders order = orderMapper.getByNumber(ordersPaymentDTO.getOrderNumber());
+        if (order == null || !BaseContext.getCurrentId().equals(order.getUserId())) {
+            throw new OrderBusinessException(MessageConstant.ORDER_PERMISSION_DENIED);
+        }
 
         // 直接调用paySuccess方法，模拟支付成功
         paySuccess(ordersPaymentDTO.getOrderNumber());
@@ -262,6 +277,15 @@ public class OrderServiceImpl implements OrderService {
         return orderVO;
     }
 
+    @Override
+    public OrderVO detailsForUser(Long id) {
+        Orders orders = orderMapper.getById(id);
+        if (orders == null || !BaseContext.getCurrentId().equals(orders.getUserId())) {
+            throw new OrderBusinessException(MessageConstant.ORDER_PERMISSION_DENIED);
+        }
+        return details(id);
+    }
+
     /**
      * 用户取消订单
      *
@@ -274,6 +298,9 @@ public class OrderServiceImpl implements OrderService {
         // 校验订单是否存在
         if (ordersDB == null) {
             throw new OrderBusinessException(MessageConstant.ORDER_NOT_FOUND);
+        }
+        if (!BaseContext.getCurrentId().equals(ordersDB.getUserId())) {
+            throw new OrderBusinessException(MessageConstant.ORDER_PERMISSION_DENIED);
         }
 
         // 订单状态 1待付款 2待确认 3已确认 4已发货 5已完成 6已取消
@@ -304,6 +331,23 @@ public class OrderServiceImpl implements OrderService {
         orderMapper.update(orders);
     }
 
+    @Override
+    public void userComplete(Long id) {
+        Orders ordersDB = orderMapper.getById(id);
+        if (ordersDB == null || !BaseContext.getCurrentId().equals(ordersDB.getUserId())) {
+            throw new OrderBusinessException(MessageConstant.ORDER_PERMISSION_DENIED);
+        }
+        if (!Orders.DELIVERY_IN_PROGRESS.equals(ordersDB.getStatus())) {
+            throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+        }
+        Orders orders = Orders.builder()
+                .id(id)
+                .status(Orders.COMPLETED)
+                .deliveryTime(LocalDateTime.now())
+                .build();
+        orderMapper.update(orders);
+    }
+
     /**
      * 再来一单
      *
@@ -312,6 +356,10 @@ public class OrderServiceImpl implements OrderService {
     public void repetition(Long id) {
         // 查询当前用户id
         Long userId = BaseContext.getCurrentId();
+        Orders orders = orderMapper.getById(id);
+        if (orders == null || !userId.equals(orders.getUserId())) {
+            throw new OrderBusinessException(MessageConstant.ORDER_PERMISSION_DENIED);
+        }
 
         // 根据订单id查询当前订单详情
         List<OrderDetail> orderDetailList = orderDetailMapper.getByOrderId(id);
@@ -541,7 +589,7 @@ public class OrderServiceImpl implements OrderService {
     public void reminder(Long id) {
         // 查询订单是否存在
         Orders orders = orderMapper.getById(id);
-        if (orders == null) {
+        if (orders == null || !BaseContext.getCurrentId().equals(orders.getUserId())) {
             throw new OrderBusinessException(MessageConstant.ORDER_NOT_FOUND);
         }
 

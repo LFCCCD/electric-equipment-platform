@@ -78,7 +78,7 @@ public class OrderController {
      */
     @GetMapping("/orderDetail/{id}")
     public Result<OrderVO> details(@PathVariable("id") Long id) {
-        OrderVO orderVO = orderService.details(id);
+        OrderVO orderVO = orderService.detailsForUser(id);
         return Result.success(orderVO);
     }
 
@@ -90,6 +90,15 @@ public class OrderController {
     @PutMapping("/cancel/{id}")
     public Result<String> cancel(@PathVariable("id") Long id) throws Exception {
         orderService.userCancelById(id);
+        return Result.success();
+    }
+
+    /**
+     * 采购用户确认收货。
+     */
+    @PutMapping("/complete/{id}")
+    public Result<String> complete(@PathVariable("id") Long id) {
+        orderService.userComplete(id);
         return Result.success();
     }
 

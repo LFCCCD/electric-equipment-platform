@@ -18,7 +18,7 @@ import com.power.service.ShoppingCartService;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
-@RequestMapping("/user/merchantpingCart")
+@RequestMapping("/user/shoppingCart")
 @Slf4j
 public class ShoppingCartController {
 
@@ -45,8 +45,8 @@ public class ShoppingCartController {
      */
     @GetMapping("/list")
     public Result<List<ShoppingCart>> list() {
-        List<ShoppingCart> shopList = shoppingCartService.showShoppingCart();
-        return Result.success(shopList);
+        List<ShoppingCart> cartList = shoppingCartService.showShoppingCart();
+        return Result.success(cartList);
     }
 
     /**

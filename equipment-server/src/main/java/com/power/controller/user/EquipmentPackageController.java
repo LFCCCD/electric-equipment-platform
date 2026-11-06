@@ -5,6 +5,7 @@ import com.power.entity.EquipmentPackage;
 import com.power.result.Result;
 import com.power.service.EquipmentPackageService;
 import com.power.vo.EquipmentItemVO;
+import com.power.vo.EquipmentPackageVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,5 +47,16 @@ public class EquipmentPackageController {
     public Result<List<EquipmentItemVO>> equipmentList(@PathVariable("id") Long id) {
         List<EquipmentItemVO> list = packageService.getEquipmentItemById(id);
         return Result.success(list);
+    }
+
+    /**
+     * 查询套餐详情。
+     *
+     * @param id 套餐ID
+     * @return 套餐详情
+     */
+    @GetMapping("/{id}")
+    public Result<EquipmentPackageVO> details(@PathVariable("id") Long id) {
+        return Result.success(packageService.getById(id));
     }
 }

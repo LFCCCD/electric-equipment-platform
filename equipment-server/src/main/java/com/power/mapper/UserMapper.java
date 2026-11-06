@@ -20,6 +20,15 @@ public interface UserMapper {
     public User getByOpenid(String openid);
 
     /**
+     * 根据本地账号查询采购用户
+     *
+     * @param username 登录账号
+     * @return 采购用户
+     */
+    @Select("select * from user where username = #{username}")
+    User getByUsername(String username);
+
+    /**
      * 插入用户
      *
      * @param user

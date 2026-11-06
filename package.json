@@ -1,0 +1,16 @@
+{
+  "name": "electric-equipment-platform-frontend",
+  "private": true,
+  "version": "1.0.0",
+  "workspaces": [
+    "frontend/admin-web",
+    "frontend/mobile-web"
+  ],
+  "scripts": {
+    "dev:admin": "npm --workspace equipment-admin-web run dev",
+    "dev:mobile": "npm --workspace equipment-mobile-web run dev",
+    "build:admin": "npm --workspace equipment-admin-web run build",
+    "build:mobile": "npm --workspace equipment-mobile-web run build",
+    "build": "npm run build:admin && npm run build:mobile"
+  }
+}

@@ -21,6 +21,12 @@ public class User implements Serializable {
     // 微信用户唯一标识
     private String openid;
 
+    // 本地演示登录账号
+    private String username;
+
+    // PBKDF2 密码摘要
+    private String password;
+
     // 姓名
     private String name;
 
@@ -35,6 +41,9 @@ public class User implements Serializable {
 
     // 头像
     private String avatar;
+
+    // 0 禁用 1 启用
+    private Integer status;
 
     // 注册时间
     private LocalDateTime createTime;

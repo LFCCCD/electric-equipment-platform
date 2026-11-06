@@ -4,7 +4,10 @@
 .tools
 .vscode
 .env
+node_modules
 **/target
 **/application-env.yml
 docs/*.docx
+frontend/*/node_modules
+frontend/*/dist
 *.log
